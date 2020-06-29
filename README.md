@@ -1,20 +1,21 @@
-# (No Title)
+# Project Duet (aka Clarisa)
 
-Project (Title HERE) is a gRPC-based bot gateway for Discord, it removes the need for you to implement sharding, event handling, etc. and focuses mostly on what matters the most: writing the functionality for your bot.
+Project Duet is a new architecture based on learnings from [Clara](https://github.com). The idea on the bot architecture we wanted to go was:
 
-You can implement your own command engine using gRPC - and you don't need to worry about memory usage for it, it only needs to do two things, parse then send results.
+- The developer shouldn't worry about memory management, or managing things like presence updates, events, and so on.
+- The gateway should be flexible - it doesn't need to be overly complicated to be used. APIs it represent should allow the developer to be more productive.
+- You only implement commands, the rest is on us.
 
-## How it works
+Hence, what came up was known as "Project Duet" - a bot gateway for Discord designed to do exactly that. Using gRPC, Project Duet bots only need to implement the things that matter most for their bot - the functionality.
 
-Project (Title HERE) is staying true to the microservices architecture, meaning you can split your bot's code into the gateway, the command engine, the cache, and the database.
 
-This project solves the gateway part for you, as it sends context to your gRPC command backend and finds the suitable command for it.
+## Architecture
 
-## API
+Project Duet is composed of two things:
 
-make sure you report all your commands as in first init, the gateway will perform a `GET` to `/reportcmds` in your command engine. Your command engine should be able to report all the cmds in an array then have them callable under the `/cmd/:cmdname` route.
+- **Kaori** (`gateway/`) - This is where all the magic happens, it has basic command registration and maintains only what could have been implemented manually by a developer. It is written in Go to be flexible.
 
-More documentation coming soon.
+- **Kosei** (`library/`) - These are the Client API wrappers that implements the Kaori API. We assume that all Kosei-based clients are gRPC clients and servers, so we just need to query a specific route from Kaori.
 
 ## This is early stage!
 
@@ -23,5 +24,3 @@ Keep in mind a lot of this stuff is not yet in stone and things may break or cha
 ## Contributing
 
 For beginners, we encourage you use VSCode for this as we declared a prebuilt Docker environment for you, simply install the extension and go to your remotes screen.
-
-For people who has dealt with Go before, standard Go rules apply here so if you're willing to help out please do so!
